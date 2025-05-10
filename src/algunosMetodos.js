@@ -83,3 +83,40 @@ exports.eliminarTasks = async (event) => {
    };
 }
 };
+
+exports.actualizarCategory = async (event) => {
+    const dynamoDB = new DynamoDB.DocumentClient();
+    const { id } = event.pathParameters;
+    const { name, descripcion } = JSON.parse(event.body); // Asegúrate de pasar estos campos en el body
+
+    const params = {
+        TableName: 'categoryTable1',
+        Key: { id },
+        UpdateExpression: 'set name = :name, descripcion = :descripcion',
+        ExpressionAttributeValues: {
+            ':name': name,
+            ':descripcion': descripcion,
+        },
+        ReturnValues: 'ALL_NEW'
+    };
+
+    try {
+        const response = await dynamoDB.update(params).promise();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: 'Categoria actualizada con éxito',
+                data: response.Attributes
+            })
+        };
+    } catch (error) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: 'Error al actualizar la categoria',
+                error: error.message
+            })
+        };
+    }
+};

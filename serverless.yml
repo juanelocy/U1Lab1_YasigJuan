@@ -29,7 +29,7 @@ functions:
           path: /categories1
           method: put
   algunosMetodos:
-    handler: src/algunosMetodos.obtenerTasks
+    handler: src/algunosMetodos.obtenerTask
     events:
       - httpApi:
           path: /categories
@@ -46,6 +46,14 @@ functions:
       - httpApi:
           path: /categories/{id}
           method: delete
+  actualizarCategory:
+    handler: src/algunosMetodos.actualizarCategory
+    events:
+      - http:
+          path: /categories/{id}
+          method: put
+          cors: true
+
 
 resources: # CloudFormation template syntax from here on.
     Resources:
