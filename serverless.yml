@@ -1,0 +1,62 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: jcyasig2
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: juan-lab1
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: juan-lab1
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+      - arn:aws:dynamodb:us-east-1:040479514454:table/categoryTable1
+
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  agregarCategory:
+    handler: src/agregarCategory.agregarCategory
+    events:
+      - httpApi:
+          path: /categories1
+          method: put
+  algunosMetodos:
+    handler: src/algunosMetodos.obtenerTasks
+    events:
+      - httpApi:
+          path: /categories
+          method: get
+  obtenerTask:
+    handler: src/algunosMetodos.obtenerTask
+    events:
+      - httpApi:
+          path: /categories/{id}
+          method: get
+  eliminarTask:
+    handler: src/algunosMetodos.eliminarTasks
+    events:
+      - httpApi:
+          path: /categories/{id}
+          method: delete
+
+resources: # CloudFormation template syntax from here on.
+    Resources:
+      categoryTable1:
+        Type: AWS::DynamoDB::Table
+        Properties:
+          TableName: categoryTable1
+          BillingMode: PAY_PER_REQUEST
+          AttributeDefinitions:
+            - AttributeName: id
+              AttributeType: S
+          KeySchema:
+            - AttributeName: id
+              KeyType: HASH
